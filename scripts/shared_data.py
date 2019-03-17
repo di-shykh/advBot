@@ -1,6 +1,4 @@
-username = "di49"
-email="*****" #убрала,чтобы не светить ящик и пароль
-password = "******" #убрала,чтобы не светить ящик и пароль
+import glob, os
 
 category='Животные, растения'
 section='Кошки, котята'
@@ -20,8 +18,36 @@ description="""Один хороший ребёнок ищет себе роди
 short_description='Хороший котик Томас ищет дом'
 price=0
 bargain=False
+contact_name='Ирина'
+contact_phone='+37529-676-85-00'
 
 city="Минск"
 region="Минск и область"
 
-images=['47.jpg','48.jpg','49.jpg','50.jpg','51.jpg','52.jpg']
+images=[]
+#find all images file in folder and add its path to array
+images_folder=os.path.join('images','tomas')
+os.chdir(images_folder)
+for file in glob.glob("*.jpg"):
+    images.append(file)
+
+
+class Location:
+  def __init__(self,city,region):
+    self.city=city
+    self.region=region
+
+class Advertisment:
+  def __init__(self,category,section,title,location,description,short_description,price,bargain,images):
+    self.category=category
+    self.section=section
+    self.title=title
+    self.location=location
+    self.description=description
+    self.short_description=short_description
+    self.price=price
+    self.bargain=bargain
+    self.images=images
+
+location=Location(city,region)
+advertisment=Advertisment(category,section,title,location,description,short_description,price,bargain,images)

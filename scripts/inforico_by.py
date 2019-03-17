@@ -15,6 +15,12 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
+username = "di49"
+email="*****" #убрала,чтобы не светить ящик и пароль
+password = "*****" #убрала,чтобы не светить ящик и пароль
+
+path_to_cookies=os.path.join('cookies','cookies_inforico_by.pkl')
+
 try:
   driver = webdriver.Chrome('chromedriver.exe') if webdriver.Chrome('chromedriver.exe') else webdriver.Chrome('chromedriver')
 except Exception:
@@ -24,23 +30,6 @@ class Account:
     self.username=username
     self.password=password
     self.email=email
-
-class Location:
-  def __init__(self,city,region):
-    self.city=city
-    self.region=region
-
-class Advertisment:
-  def __init__(self,category,section,title,location,description,short_description,price,bargain,images):
-    self.category=category
-    self.section=section
-    self.title=title
-    self.location=location
-    self.description=description
-    self.short_description=short_description
-    self.price=price
-    self.bargain=bargain
-    self.images=images
 
 class Inforico_Bot:
 
@@ -224,7 +213,7 @@ class Inforico_Bot:
     driver=self.driver
     self.login()
     #cookies dump
-    pickle.dump( driver.get_cookies() , open("cookies.pkl","wb")) 
+    pickle.dump( driver.get_cookies() , open(path_to_cookies,"wb")) 
     #закрываю браузер  - куки в браузере не сохраняются
     #driver.close() 
 
@@ -233,7 +222,7 @@ class Inforico_Bot:
     driver=self.driver
     driver.get('http://inforico.by/')
     #get cookies from dump
-    cookies = pickle.load(open("cookies.pkl","rb"))
+    cookies = pickle.load(open(path_to_cookies,"rb"))
     driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
       driver.add_cookie(cookie)
@@ -242,13 +231,13 @@ class Inforico_Bot:
 
 if __name__ == "__main__":
 
-    user=Account(shared_data.username,shared_data.password,shared_data.email)
-    location=Location(shared_data.city,shared_data.region)
-    advertisment=Advertisment(shared_data.category,shared_data.section,shared_data.title,location,shared_data.description,shared_data.short_description,shared_data.price,shared_data.bargain,shared_data.images)
+    user=Account(username,password,email)
+    location=shared_data.location
+    advertisment=shared_data.advertisment
 
     inforico = Inforico_Bot(user,advertisment)
     inforico.login()
     #inforico.getCookies() #Cookies сохраняются в файле
     #inforico.loginWithCookies() #Отрабатывает без ошибок,но авторизация не работает
-    #inforico.addAdvertisment() #Работает всроде как хорошо
+    #inforico.addAdvertisment() #Работает вроде как хорошо
     inforico.deleteAdvertisment() #Не могу перейти к списку объявлений, выкидывает окно авторизации
