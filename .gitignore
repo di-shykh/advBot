@@ -1,0 +1,23 @@
+
+/script_for_advUpdater_db.odt
+/script_for_advUpdater_db.sql
+/AdvUpdater_db_DB_schema.pdf
+/Декомпозиция.pdf
+/Декомпозиция.odt
+/AdvUpdaterMockup+.bmpr
+/AdvUpdaterMockup.pdf
+/AdvUpdaterMockup.bmpr
+/script.txt
+/8BddxmbIIpjKAAAAAASUVORK5CYII=.png
+/схема БД.png
+
+/scripts/.vscode
+/scripts/cookies
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

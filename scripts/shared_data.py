@@ -1,8 +1,9 @@
 import glob, os
+from pathlib import Path
 
 category='Животные, растения'
 section='Кошки, котята'
-title='Хороший котик Томас ищет дом'
+title='Озорной котик Томас ищет дом'
 description="""Один хороший ребёнок ищет себе родителей!
         Томас - озорной и игривый сорванец, как все мальчишки-ребятишки! Играть обожает безумно, но если хозяин устал, то можно и коленки помять, помурчать. 
         Котик нежный, ласковый, мурчащий. В общем, крутой до невозможности! 
@@ -26,10 +27,14 @@ region="Минск и область"
 
 images=[]
 #find all images file in folder and add its path to array
-images_folder=os.path.join('images','tomas')
-os.chdir(images_folder)
+#images_folder=os.path.join('images','tomas')
+images_folder = Path("images/tomas/")
+'''os.chdir(images_folder)
 for file in glob.glob("*.jpg"):
-    images.append(file)
+    images.append(file)'''
+for file in os.listdir(images_folder):
+  if file.endswith(".jpg"):
+    images.append(os.path.join(images_folder, file))
 
 
 class Location:

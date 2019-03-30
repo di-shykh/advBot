@@ -10,21 +10,26 @@ import time
 import random
 import sys
 import os
+from sys import platform
 
 import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
 username = "di49"
-email="*****" #убрала,чтобы не светить ящик и пароль
-password = "*****" #убрала,чтобы не светить ящик и пароль
+email="****" #убрала,чтобы не светить ящик и пароль
+password = "****" #убрала,чтобы не светить ящик и пароль
 
 path_to_cookies=os.path.join('cookies','cookies_inforico_by.pkl')
 
-try:
-  driver = webdriver.Chrome('chromedriver.exe') if webdriver.Chrome('chromedriver.exe') else webdriver.Chrome('chromedriver')
-except Exception:
-  print('some error')
+#check os 
+if platform == "linux" or platform == "linux2":
+  driver=webdriver.Chrome('chromedriver')
+elif platform == "darwin":
+  driver=webdriver.Chrome('chromedriver_mac')
+elif platform == "win32":
+  driver = webdriver.Chrome('chromedriver.exe')
+
 class Account:
   def __init__(self,username,password,email):
     self.username=username
@@ -96,6 +101,7 @@ class Inforico_Bot:
     #passworword_elem.send_keys(Keys.RETURN)
     time.sleep(random.randint(2,5))
     button_enter.click()
+    driver.get('http://inforico.by/my/')
 
   def addAdvertisment(self):
     #тут все хорошо,только после добавления нужно по ссылке в письме переходить,если руками логиниться,то не нужно почту проверять и т.п.,объявление появляется сразу
@@ -123,8 +129,7 @@ class Inforico_Bot:
       add_file_button=driver.find_element_by_xpath('//input[@type="file"][@name="new-image"]')
       add_file_button.clear()
       
-      image_for_linux_windows=os.path.join('images','tomas',image)
-      add_file_button.send_keys(os.path.abspath(image_for_linux_windows))
+      add_file_button.send_keys(os.path.abspath(image))
       while True:
         error_picture=None
         try:
@@ -138,7 +143,7 @@ class Inforico_Bot:
             error_picture=None
             add_file_button=driver.find_element_by_xpath('//input[@type="file"][@name="new-image"]')
             add_file_button.clear()
-            add_file_button.send_keys(os.path.abspath(image_for_linux_windows))
+            add_file_button.send_keys(os.path.abspath(image))
           else:
             break
     
@@ -200,7 +205,7 @@ class Inforico_Bot:
 
     #self.loginWithCookies()
     driver=self.driver
-    #driver.get('http://inforico.by/add/')
+    driver.get('http://inforico.by/add/')
 
     time.sleep(random.randint(1,5))
     driver.get('http://inforico.by/my/')
@@ -209,11 +214,12 @@ class Inforico_Bot:
     for advertisment in advertisment_div:
       print(advertisment.find_element_by_css_selector('div.alvi-title>a').text)
 
-  def getCookies(self):
+  def saveCookies(self):
     driver=self.driver
     self.login()
     #cookies dump
-    pickle.dump( driver.get_cookies() , open(path_to_cookies,"wb")) 
+    pickle.dump( driver.get_cookies() , open(os.path.abspath(path_to_cookies),"wb+")) 
+    print(driver.get_cookies())
     #закрываю браузер  - куки в браузере не сохраняются
     #driver.close() 
 
@@ -222,12 +228,14 @@ class Inforico_Bot:
     driver=self.driver
     driver.get('http://inforico.by/')
     #get cookies from dump
-    cookies = pickle.load(open(path_to_cookies,"rb"))
+    cookies = pickle.load(open(os.path.abspath(path_to_cookies),"rb"))
     driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
       driver.add_cookie(cookie)
     time.sleep(3)
     driver.get('http://inforico.by/my/')
+
+    self.login()
 
 if __name__ == "__main__":
 
@@ -236,8 +244,9 @@ if __name__ == "__main__":
     advertisment=shared_data.advertisment
 
     inforico = Inforico_Bot(user,advertisment)
-    inforico.login()
-    #inforico.getCookies() #Cookies сохраняются в файле
-    #inforico.loginWithCookies() #Отрабатывает без ошибок,но авторизация не работает
+    #inforico.login()
+    inforico.saveCookies() #Cookies сохраняются в файле
+    inforico.loginWithCookies() #Отрабатывает без ошибок,но авторизация не работает,кукисы в браузер записывает
+    time.sleep(120)
     #inforico.addAdvertisment() #Работает вроде как хорошо
-    inforico.deleteAdvertisment() #Не могу перейти к списку объявлений, выкидывает окно авторизации
+    #inforico.deleteAdvertisment() #Не могу перейти к списку объявлений, выкидывает окно авторизации
