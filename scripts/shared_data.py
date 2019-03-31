@@ -14,13 +14,15 @@ description="""Один хороший ребёнок ищет себе роди
         Если будут возникать вопросы, всегда готова помочь с консультацией. 
         Могу помочь с доставкой. 
 
-        Минск, ст.м. Пушкинская 
-        Ирина (029) 676-85-00"""
+        """
 short_description='Хороший котик Томас ищет дом'
 price=0
 bargain=False
 contact_name='Ирина'
 contact_phone='+37529-676-85-00'
+place='Минск, ст.м. Пушкинская'
+age=1.5
+age_y='лет'
 
 city="Минск"
 region="Минск и область"
@@ -42,8 +44,14 @@ class Location:
     self.city=city
     self.region=region
 
+class Contact:
+  def __init__(self,contact_name,contact_phone,place):
+    self.contact_name=contact_name
+    self.contact_phone=contact_phone
+    self.place=place
+
 class Advertisment:
-  def __init__(self,category,section,title,location,description,short_description,price,bargain,images):
+  def __init__(self,category,section,title,location,description,short_description,price,bargain,images,age,age_y):
     self.category=category
     self.section=section
     self.title=title
@@ -53,6 +61,9 @@ class Advertisment:
     self.price=price
     self.bargain=bargain
     self.images=images
+    self.age=age
+    self.age_y=age_y
 
 location=Location(city,region)
-advertisment=Advertisment(category,section,title,location,description,short_description,price,bargain,images)
+contact=Contact(contact_name,contact_phone,place)
+advertisment=Advertisment(category,section,title,location,description,short_description,price,bargain,images,age,age_y)

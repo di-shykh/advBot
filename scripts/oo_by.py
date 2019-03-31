@@ -113,8 +113,8 @@ class OO_Bot:
 
   def findAdvertisment(self):
     self.driver.get('http://oo.by/browse_listings.php')
-    table_with_vertisment=self.driver.find_element_by_tag_name('table')
-    rows=table_with_vertisment.find_elements_by_tag_name('tr')
+    table_with_advertisment=self.driver.find_element_by_tag_name('table')
+    rows=table_with_advertisment.find_elements_by_tag_name('tr')
     for row in rows:
       cells=row.find_elements_by_tag_name('td')
       for cell in cells:
@@ -164,7 +164,7 @@ class OO_Bot:
     time.sleep(2)
     text_input=self.driver.find_element_by_xpath('//textarea[@name="description"]')
     text_input.clear()
-    text_input.send_keys(self.advertisment.description)
+    text_input.send_keys(self.advertisment.description+'\n'+shared_data.contact.place+'\n'+shared_data.contact.contact_name+':'+'\n'+shared_data.contact.contact_name)
 
     time.sleep(2)
     price_input=self.driver.find_element_by_xpath('//input[@name="price"]')

@@ -12,7 +12,7 @@
 /dbScheme.png
 
 /scripts/.vscode
-/scripts/cookies
+/scripts/cookies/*.pkl
 
 # Editor directories and files
 .idea

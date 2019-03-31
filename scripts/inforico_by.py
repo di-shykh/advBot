@@ -116,7 +116,7 @@ class Inforico_Bot:
     time.sleep(1)
     text_input=driver.find_element_by_xpath('//textarea[@name="ad[main][text]"]')
     text_input.clear()
-    text_input.send_keys(self.advertisment.description)
+    text_input.send_keys(self.advertisment.description+'\n'+shared_data.contact.place+'\n'+shared_data.contact.contact_name+':'+'\n'+shared_data.contact.contact_name)
 
     price_input=driver.find_element_by_xpath('//input[@name="ad[main][price]"]')
     price_input.clear()
