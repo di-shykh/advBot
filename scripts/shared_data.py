@@ -34,9 +34,12 @@ images_folder = Path("images/tomas/")
 '''os.chdir(images_folder)
 for file in glob.glob("*.jpg"):
     images.append(file)'''
-for file in os.listdir(images_folder):
-  if file.endswith(".jpg"):
-    images.append(os.path.join(images_folder, file))
+try:
+  for file in os.listdir(images_folder):
+    if file.endswith(".jpg"):
+      images.append(os.path.join(images_folder, file))
+except FileNotFoundError:
+  print('problem with path to image in Win')
 
 
 class Location:
