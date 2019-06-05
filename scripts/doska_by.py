@@ -16,11 +16,11 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = "di49di49" 
-email="*****" #убрала,чтобы не светить ящик и пароль
-password = "*****" #убрала,чтобы не светить ящик и пароль
+username = shared_data.username 
+email=shared_data.email
+password = shared_data.password
 
-path_to_cookies=os.path.join('cookies','cookies_doska_by.pkl')
+path_to_cookies=os.path.join('scripts/cookies','cookies_doska_by.pkl')
 
 if platform == "linux" or platform == "linux2":
   driver=webdriver.Chrome('chromedriver')
@@ -42,7 +42,7 @@ class Doska_Bot:
     self.driver=webdriver.Chrome()
 
   def closeBrowser(self):
-    self.driver.close()
+    self.driver.quit()
   
   def login(self):
     self.driver.get('https://www.doska.by/login/')
@@ -98,7 +98,7 @@ class Doska_Bot:
     group=self.driver.find_element_by_xpath("//label[text()='Животные']").click()
 
     time.sleep(random.randint(2,3))
-    section=self.driver.find_element_by_xpath("//label[text()='"+self.advertisment.section+"']").click()
+    section=self.driver.find_element_by_xpath("//label[contains(.,'"+self.advertisment.section+"')]").click()
 
     time.sleep(random.randint(2,3))
     select_breed = self.driver.find_element_by_xpath("//select[@name='cid_2'][@class='new_ad_select']/option[text()='Беспородная']").click()
@@ -214,7 +214,7 @@ if __name__ == "__main__":
     advertisment=shared_data.advertisment
     
     doska = Doska_Bot(user,advertisment)
-    #doska.saveCookies()
+    doska.saveCookies()
     doska.loginWithCookies()
     #oo.login()
     #oo.deleteAdvertisment()

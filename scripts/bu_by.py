@@ -16,11 +16,11 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = "di49di49" 
-email="*****" #убрала,чтобы не светить ящик и пароль
-password = "*****" #убрала,чтобы не светить ящик и пароль
+username = shared_data.username 
+email=shared_data.email
+password = shared_data.password
 
-path_to_cookies=os.path.join('cookies','cookies_bu_by.pkl')
+path_to_cookies=os.path.join('scripts/cookies','cookies_bu_by.pkl')
 
 if platform == "linux" or platform == "linux2":
   driver=webdriver.Chrome('chromedriver')
@@ -42,7 +42,7 @@ class Bu_Bot:
     self.driver=webdriver.Chrome()
 
   def closeBrowser(self):
-    self.driver.close()
+    self.driver.quit()
   
   def login(self):
     self.driver.get('http://bu.by/user_auth.html?action=login')
@@ -82,7 +82,7 @@ class Bu_Bot:
     link_to_ads=self.driver.find_element_by_xpath("//a[text()='Ваши объявления']").click()
 
   def addAdvertisment(self):
-    link_add=self.driver.find_element_by_xpath("//a[@href='edit.html'][text()='Добавить']").click()
+    link_add=self.driver.find_element_by_xpath("//a[text()='Добавить']").click()
 
     time.sleep(2)
     category=self.driver.find_element_by_xpath("//select[@id='main_cat_id']/option[text()='Животные и растения']").click()#подумать как убрать текст

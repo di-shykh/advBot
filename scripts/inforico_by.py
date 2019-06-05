@@ -16,9 +16,9 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = "di49"
-email="****" #убрала,чтобы не светить ящик и пароль
-password = "****" #убрала,чтобы не светить ящик и пароль
+username = shared_data.username 
+email=shared_data.email
+password = shared_data.password
 
 path_to_cookies=os.path.join('cookies','cookies_inforico_by.pkl')
 
@@ -44,7 +44,7 @@ class Inforico_Bot:
     self.driver=webdriver.Chrome()
 
   def closeBrowser(self):
-    self.driver.close()
+    self.driver.quit()
   
   def login(self):
     driver=self.driver

@@ -16,11 +16,11 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = "di49di49" 
-email="****" #убрала,чтобы не светить ящик и пароль
-password = "*****" #убрала,чтобы не светить ящик и пароль
+username = shared_data.username 
+email=shared_data.email
+password = shared_data.password
 
-path_to_cookies=os.path.join('cookies','cookies_oo_by.pkl')
+path_to_cookies=os.path.join('scripts/cookies','cookies_oo_by.pkl')
 
 if platform == "linux" or platform == "linux2":
   driver=webdriver.Chrome('chromedriver')
@@ -42,7 +42,7 @@ class OO_Bot:
     self.driver=webdriver.Chrome()
 
   def closeBrowser(self):
-    self.driver.close()
+    self.driver.quit()
   
   def login(self):
     self.driver.get('http://oo.by/login.html')
@@ -83,7 +83,7 @@ class OO_Bot:
   def addAdvertisment(self):
     self.driver.get('http://oo.by/newad.php')
 
-    time.sleep(2)
+    time.sleep(5)
     category_click=self.driver.find_element_by_xpath('//select[@name="category"]').click()
     category=self.driver.find_element_by_xpath('//select[@name="category"]')
     for option in category.find_elements_by_tag_name('option'):
@@ -164,7 +164,7 @@ class OO_Bot:
     time.sleep(2)
     text_input=self.driver.find_element_by_xpath('//textarea[@name="description"]')
     text_input.clear()
-    text_input.send_keys(self.advertisment.description+'\n'+shared_data.contact.place+'\n'+shared_data.contact.contact_name+':'+'\n'+shared_data.contact.contact_name)
+    text_input.send_keys(self.advertisment.description+'\n'+shared_data.contact.place+'\n'+shared_data.contact.contact_name+':'+'\n'+shared_data.contact.contact_phone)
 
     time.sleep(2)
     price_input=self.driver.find_element_by_xpath('//input[@name="price"]')
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     advertisment=shared_data.advertisment
     
     oo = OO_Bot(user,advertisment)
-    #oo.saveCookies()
+    oo.saveCookies()
     oo.loginWithCookies()
     #oo.login()
     oo.viewAds()

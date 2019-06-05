@@ -12,7 +12,9 @@
 /dbScheme.png
 
 /scripts/.vscode
+/scripts/__pycache__
 /scripts/cookies/*.pkl
+/python-virtual-environments
 
 # Editor directories and files
 .idea
