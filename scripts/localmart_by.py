@@ -191,7 +191,6 @@ class Localmart_Bot:
     time.sleep(random.randint(1,3))
     breed=self.driver.find_element_by_xpath("//li[@class='ui-menu-item']/a[text()='Другая']").click()
 
-
   def addImages(self):
     for image in self.advertisment.images:
       time.sleep(random.randint(1,3))
@@ -265,10 +264,9 @@ if __name__ == "__main__":
     
     localmart = Localmart_Bot(user,advertisment)
     localmart.loginWithCookies()#без ввода логина и пароля не пускает даже с сохраненными кукисами
-    #localmart.raiseAdvertisment()
+    localmart.raiseAdvertisment()
     #localmart.editAdvertisment()
     #localmart.viewAds()
     #localmart.deleteAdvertisment()
-    localmart.addAdvertisment()
-    time.sleep(10)
+    #localmart.addAdvertisment()
     localmart.closeBrowser()

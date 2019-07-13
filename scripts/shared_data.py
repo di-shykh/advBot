@@ -3,7 +3,7 @@ from pathlib import Path
 
 category='Животные'# поправить в скриптах категорию(не точное совпадение,а содержит "животные")
 section='Кошки'# поправить в скриптах категорию(не точное совпадение,а содержит "кошки")
-title='Озорной котик Томас ищет дом'
+title='Очаровательный котик Томас ищет дом'
 description="""Один хороший ребёнок ищет себе родителей!
         Томас - озорной и игривый сорванец, как все мальчишки-ребятишки! Играть обожает безумно, но если хозяин устал, то можно и коленки помять, помурчать. 
         Котик нежный, ласковый, мурчащий. В общем, крутой до невозможности! 
@@ -23,6 +23,7 @@ contact_operator='VELCOM' #posible variants: 'VELCOM', 'МТС', 'Life)'
 place='Минск, ст.м. Пушкинская'
 age=1.5
 age_y='лет'
+key_words='кот даром'
 
 city="Минск"
 region="Минск"#исправить везде не точное совпадение текста,а содержит...
@@ -38,9 +39,9 @@ for file in os.listdir(images_folder):
   if file.endswith(".jpg"):
     images.append(os.path.join(images_folder, file))
 
-username = "*****" 
-email="******" #убрала,чтобы не светить ящик и пароль
-password = "*******" #убрала,чтобы не светить ящик и пароль
+username = "di49di49"
+email="*****" #убрала,чтобы не светить ящик и пароль
+password = "*****" #убрала,чтобы не светить ящик и пароль
 
 
 class Location:
@@ -56,7 +57,7 @@ class Contact:
     self.contact_operator=contact_operator
 
 class Advertisment:
-  def __init__(self,category,section,title,location,description,short_description,price,images,age,age_y):
+  def __init__(self,category,section,title,location,description,short_description,price,images,age,age_y,key_words):
     self.category=category
     self.section=section
     self.title=title
@@ -67,7 +68,8 @@ class Advertisment:
     self.images=images
     self.age=age
     self.age_y=age_y
+    self.key_words=key_words
 
 location=Location(city,region)
 contact=Contact(contact_name,contact_phone,place,contact_operator)
-advertisment=Advertisment(category,section,title,location,description,short_description,price,images,age,age_y)
+advertisment=Advertisment(category,section,title,location,description,short_description,price,images,age,age_y,key_words)
