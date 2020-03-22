@@ -50,8 +50,10 @@ class IRR_Bot:
     time.sleep(random.randint(1,3))
     link_to_login=self.driver.find_element_by_xpath("//a[@id='a_login']/span[text()='Вход']").click()
 
+    hidden_div_for_autorization=self.driver.find_element_by_xpath("//div[@id='popup-wrap']")
+    self.driver.execute_script("arguments[0].style.display='block'",hidden_div_for_autorization)
     time.sleep(3)
-    popup_window=self.driver.find_element_by_xpath("//form[@id='loginForm']") #id='reg_block'
+    popup_window=hidden_div_for_autorization.find_element_by_xpath(".//form[@id='loginForm']") #id='reg_block'
 
     email_input=popup_window.find_element_by_xpath('//input[@name="login"]')
     email_input.clear()
@@ -77,7 +79,7 @@ class IRR_Bot:
     #driver.close() 
 
   def loginWithCookies(self):
-    self.driver.get('http://irr.by/')
+    self.saveCookies()
     #get cookies from dump
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
@@ -109,18 +111,24 @@ class IRR_Bot:
     #option_region=select_region.find_element_by_xpath("//option[contains(text(),'"+self.advertisment.location.city+"']").click() #подумать как лучше задавать область для всех областей
     div=self.driver.find_element_by_xpath("//div[@id='fr_region_chzn']")
     div.click()
-    option_region=div.find_element_by_xpath("//a[contains(text(),'"+self.advertisment.location.city+"']").click()#тут падает
+    option_region=div.find_element_by_xpath("//a[contains(text(),'"+self.advertisment.location.city+"')]").click()#тут падает
     time.sleep(2)
     input_city=self.driver.find_element_by_xpath("//input[@name='address_city']")
     input_city.clear()
     input_city.send_keys(self.advertisment.location.city)
+    popup_ul=self.driver.find_element_by_xpath("//ul[@aria-activedescendant='ui-active-menuitem']")
+    self.driver.execute_script("arguments[0].style.display='none'",popup_ul)
     time.sleep(2)
-    #select_category=self.driver.find_element_by_xpath("//select[@id='sel1']")
+    self.driver.execute_script("document.getElementsByClassName('popup_place popup')[0].style.display='none'")
+    select_category=self.driver.find_element_by_xpath("//div[@id='sel1_chzn']").click()
+    time.sleep(2)
     #category=select_category.find_element_by_xpath("//option[contains(text(),'"+self.advertisment.category+"']").click()
-    category=self.driver.find_element_by_xpath("//div[@id='sel1_chzn']/a[contains(text(),'"+self.advertisment.category+"']").click()
+    category=select_category.find_element_by_xpath(".//li[contains(text(),'"+self.advertisment.category+"')]").click()
+    time.sleep(2)
+    select_categor2=self.driver.find_element_by_xpath("//div[@id='sel_562_chzn']").click()
     time.sleep(2)
     #category2=self.driver.find_element_by_xpath("//option[contains(text(),'"+self.advertisment.category+"']")
-    category2=self.driver.find_element_by_xpath("//li[contains(text(),'"+self.advertisment.category+"']").click()
+    category2=select_categor2.find_element_by_xpath(".//li[contains(text(),'"+self.advertisment.category+"']").click()
 
 
 if __name__ == "__main__":

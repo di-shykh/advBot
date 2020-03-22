@@ -16,7 +16,7 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = shared_data.username 
+username = shared_data.username
 email=shared_data.email
 password = shared_data.password
 
@@ -43,10 +43,10 @@ class Bu_Bot:
 
   def closeBrowser(self):
     self.driver.quit()
-  
+
   def login(self):
     self.driver.get('http://bu.by/user_auth.html?action=login')
-    
+
     time.sleep(random.randint(1,3))
     email_input=self.driver.find_element_by_xpath('//input[@name="email"]')
     email_input.clear()
@@ -56,7 +56,7 @@ class Bu_Bot:
     password_input=self.driver.find_element_by_xpath("//input[@type='password'][@name='pswd']")
     password_input.clear()
     password_input.send_keys(self.user.password)
-    
+
     time.sleep(random.randint(1,3))
     button_enter=self.driver.find_element_by_xpath('//input[@type="image"][@src="_img/go.gif"]')
     button_enter.click()
@@ -64,8 +64,8 @@ class Bu_Bot:
   def saveCookies(self):
     self.login()
     #cookies dump
-    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb")) 
-    #driver.close() 
+    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb"))
+    #driver.close()
 
   def loginWithCookies(self):
     self.driver.get('http://bu.by/')
@@ -73,6 +73,8 @@ class Bu_Bot:
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
+      if 'expiry' in cookie:
+        del cookie['expiry']
       self.driver.add_cookie(cookie)
     time.sleep(3)
     self.driver.get('http://bu.by/')
@@ -89,7 +91,7 @@ class Bu_Bot:
     time.sleep(2)
     subcategory=self.driver.find_element_by_xpath("//select[@id='sel_cat_135']/option[@value='139_0_1_2']").click() #self.driver.find_element_by_xpath("//select[@id='sel_cat_135']/option[text()='&nbsp; &nbsp; Кошки']").click() переписать!!!
     time.sleep(2)
-    
+
     self.fillInputs()
     self.addImages()
 
@@ -143,7 +145,7 @@ class Bu_Bot:
         add_file_button.clear()
         add_file_button.send_keys(os.path.abspath(image))
         count+=1
-  
+
   def deleteImages(self):
     delete_buttons=self.driver.find_elements_by_xpath("//a[@class='icon icon_img_del delete'][@title='Удалить']")
     for delete_button in delete_buttons:
@@ -165,11 +167,11 @@ if __name__ == "__main__":
     user=Account(username,password,email)
     location=shared_data.location
     advertisment=shared_data.advertisment
-    
+
     bu = Bu_Bot(user,advertisment)
     bu.saveCookies()
     bu.loginWithCookies()
-    #bu.editAdvertisment()
+    bu.editAdvertisment()
     bu.deleteAdvertisment()
     bu.addAdvertisment()
     bu.closeBrowser()

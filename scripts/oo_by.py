@@ -16,7 +16,7 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = shared_data.username 
+username = shared_data.username
 email=shared_data.email
 password = shared_data.password
 
@@ -43,7 +43,7 @@ class OO_Bot:
 
   def closeBrowser(self):
     self.driver.quit()
-  
+
   def login(self):
     self.driver.get('http://oo.by/login.html')
 
@@ -56,7 +56,7 @@ class OO_Bot:
     password_input=self.driver.find_element_by_xpath('//input[@name="password"]')
     password_input.clear()
     password_input.send_keys(self.user.password)
-    
+
     time.sleep(random.randint(1,3))
     button_enter=self.driver.find_element_by_xpath('//button[@type="submit"][@name="Login"]')
     time.sleep(random.randint(2,5))
@@ -65,8 +65,8 @@ class OO_Bot:
   def saveCookies(self):
     self.login()
     #cookies dump
-    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb")) 
-    #driver.close() 
+    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb"))
+    #driver.close()
 
   def loginWithCookies(self):
     self.driver.get('http://oo.by/')
@@ -74,6 +74,8 @@ class OO_Bot:
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
+      if 'expiry' in cookie:
+        del cookie['expiry']
       self.driver.add_cookie(cookie)
       if cookie.get('name')=='PHPSESSID':
         session_id=cookie.get('value')
@@ -88,7 +90,7 @@ class OO_Bot:
     category=self.driver.find_element_by_xpath('//select[@name="category"]')
     for option in category.find_elements_by_tag_name('option'):
       if 'Животные' in option.text:
-        option.click() 
+        option.click()
         break
     submit_button=self.driver.find_element_by_xpath("//button[@type='submit'][@name='Choose_categ']").click()
 
@@ -120,7 +122,7 @@ class OO_Bot:
       for cell in cells:
         if self.advertisment.title in cell.text:
           return row
-  
+
   def editAdvertismentText(self):
     row=self.findAdvertisment()
     if row:
@@ -157,7 +159,7 @@ class OO_Bot:
       add_file_button.send_keys(os.path.abspath(image))
 
   def fillAdvertismentInputs(self):
-    title_input=self.driver.find_element_by_name('title')
+    title_input=self.driver.find_element_by_xpath('//input[@name="title"]')
     title_input.clear()
     title_input.send_keys(self.advertisment.title)
 
@@ -188,14 +190,14 @@ class OO_Bot:
 
     select_breed = self.driver.find_element_by_xpath("//select[@name='animalgroup2']/option[text()='Без породы']").click()     
     time.sleep(2)
-    
+
 
 if __name__ == "__main__":
 
     user=Account(username,password,email)
     location=shared_data.location
     advertisment=shared_data.advertisment
-    
+
     oo = OO_Bot(user,advertisment)
     oo.saveCookies()
     oo.loginWithCookies()

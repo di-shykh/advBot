@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager #for updating webdriver
 
 import time
 import random
@@ -16,18 +17,20 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = shared_data.username 
+username = shared_data.username
 email=shared_data.email
 password = shared_data.password
 
 path_to_cookies=os.path.join('scripts/cookies','cookies_ssk_by.pkl')
 
-if platform == "linux" or platform == "linux2":
-  driver=webdriver.Chrome('chromedriver')
+driver=webdriver.Chrome(ChromeDriverManager().install())
+
+'''if platform == "linux" or platform == "linux2":
+ driver=webdriver.Chrome('chromedriver')
 elif platform == "darwin":
-  driver=webdriver.Chrome('chromedriver_mac')
+ driver=webdriver.Chrome('chromedriver_mac')
 elif platform == "win32":
-  driver = webdriver.Chrome('chromedriver.exe')
+  driver = webdriver.Chrome('chromedriver.exe')'''
 
 class Account:
   def __init__(self,username,password,email):
@@ -47,25 +50,25 @@ class Ssk_Bot:
   def login(self):
     self.driver.get('https://ssk.by/')
     time.sleep(random.randint(1,3))
-    login_link=self.driver.find_element_by_xpath("//a[text()='Вход']").click()
+    login_link=self.driver.find_element_by_xpath("//a[text()=' Авторизация']").click()
     time.sleep(1)
-    login_input=self.driver.find_element_by_xpath("//div[@id='login']//input[@name='login_name']")
+    login_input=self.driver.find_element_by_xpath("//*[@id='login_name']")
     login_input.clear()
     login_input.send_keys(self.user.username)
 
     time.sleep(random.randint(1,3))
-    password_input=self.driver.find_element_by_xpath("//div[@id='login']//input[@name='login_password'][@type='password']")
+    password_input=self.driver.find_element_by_xpath("//*[@id='login_password']")
     password_input.clear()
     password_input.send_keys(self.user.password)
 
     time.sleep(random.randint(1,3))
-    enter_button=self.driver.find_element_by_xpath("//div[@id='login']//input[@value='ВОЙТИ'][@type='submit']").click()
+    enter_button=self.driver.find_element_by_xpath("//button[@title='Войти'][@type='submit']").click()
 
   def saveCookies(self):
     self.login()
     #cookies dump
-    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb")) 
-    #driver.close() 
+    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb"))
+    #driver.close()
 
   def loginWithCookies(self):
     self.saveCookies()
@@ -73,6 +76,8 @@ class Ssk_Bot:
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
+      if 'expiry' in cookie:
+        del cookie['expiry']
       self.driver.add_cookie(cookie)
     time.sleep(3)
     self.driver.get('https://ssk.by/')

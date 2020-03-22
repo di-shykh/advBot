@@ -16,7 +16,7 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = shared_data.username 
+username = shared_data.username
 email=shared_data.email
 password = shared_data.password
 
@@ -43,7 +43,7 @@ class Localmart_Bot:
 
   def closeBrowser(self):
     self.driver.quit()
-  
+
   def login(self):
     self.driver.get('http://localmart.by/')
     time.sleep(random.randint(1,3))
@@ -63,7 +63,7 @@ class Localmart_Bot:
     rememberMe_input=self.driver.find_element_by_xpath('//input[@type="checkbox"][@id="LoginForm_rememberMe"]')
     if not rememberMe_input.is_selected():
       rememberMe_input.click()
-    
+
     time.sleep(random.randint(1,3))
     button_enter=self.driver.find_element_by_xpath('//a[text()="Войти"][@id="yt0"]')
     time.sleep(random.randint(2,5))
@@ -72,8 +72,8 @@ class Localmart_Bot:
   def saveCookies(self):
     self.login()
     #cookies dump
-    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb")) 
-    #driver.close() 
+    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb"))
+    #driver.close()
 
   def loginWithCookies(self):
     self.saveCookies()
@@ -81,6 +81,8 @@ class Localmart_Bot:
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
+      if 'expiry' in cookie:
+        del cookie['expiry']
       self.driver.add_cookie(cookie)
     time.sleep(3)
     self.driver.get('http://localmart.by/cabinet/items')
@@ -91,8 +93,13 @@ class Localmart_Bot:
     time.sleep(random.randint(1,3))
     self.fillInputs()
     self.addImages()
-    time.sleep(random.randint(3,5))
-    button_add_advertisment=self.driver.find_element_by_xpath("//a[text()='Разместить объявление']").click()
+    while True:
+      try:
+        time.sleep(random.randint(3,5))
+        button_add_advertisment=self.driver.find_element_by_xpath("//a[text()='Разместить объявление']").click()
+        break
+      except:
+        print('Can\'t find button add advertisment.Try again')
 
   def fillInputs(self):
     rows=self.driver.find_elements_by_xpath("//form/table/tbody/tr")
@@ -158,7 +165,7 @@ class Localmart_Bot:
   def fillInputsForSectionPriceBreed(self):
     time.sleep(random.randint(1,3))
     rows=self.driver.find_elements_by_xpath("//form/table/tbody/tr")
-  
+
     row_level2=rows[2]
     link_select_section=row_level2.find_element_by_xpath(".//a[text()='Выбрать']")
 
@@ -166,14 +173,14 @@ class Localmart_Bot:
     section=rows[2].find_element_by_xpath(".//input[@type='text']")
     section.clear()
     section.send_keys(self.advertisment.section)
- 
+
     time.sleep(random.randint(1,3))
     popup_section=rows[2].find_element_by_xpath(".//a[text()='"+self.advertisment.section+"']")
-    popup_section.click() 
+    popup_section.click()
 
     section=rows[2].find_element_by_xpath(".//input[@type='text']").click()
     time.sleep(1)
-    popup_section=rows[2].find_element_by_xpath(".//a[text()='"+self.advertisment.section+"']") 
+    popup_section=rows[2].find_element_by_xpath(".//a[text()='"+self.advertisment.section+"']")
     popup_section.click()
 
     #sometimes falls here(need to check if element //input[@type='radio'][@id='price_free'] is on the page)
@@ -190,7 +197,6 @@ class Localmart_Bot:
     link_select_breed=self.driver.find_element_by_xpath("//input[@field='fields[32]']").click()
     time.sleep(random.randint(1,3))
     breed=self.driver.find_element_by_xpath("//li[@class='ui-menu-item']/a[text()='Другая']").click()
-
 
   def addImages(self):
     for image in self.advertisment.images:
@@ -219,7 +225,7 @@ class Localmart_Bot:
   def raiseAdvertisment(self):
     if self.openAdvertisment():
       time.sleep(random.randint(3,5))
-      submit_button=self.driver.find_element_by_xpath("//a[text()='Разместить объявление']").click()
+      submit_button=self.driver.find_element_by_xpath("//a[text()='Разместить объявление']").click()# some troubles are here, when debugging all works,but without it don't add advertisment
 
   def openAdvertisment(self):
     row_with_advertisment=self.findAdvertisment()
@@ -262,13 +268,12 @@ if __name__ == "__main__":
     user=Account(username,password,email)
     location=shared_data.location
     advertisment=shared_data.advertisment
-    
+
     localmart = Localmart_Bot(user,advertisment)
     localmart.loginWithCookies()#без ввода логина и пароля не пускает даже с сохраненными кукисами
     #localmart.raiseAdvertisment()
     #localmart.editAdvertisment()
-    #localmart.viewAds()
-    #localmart.deleteAdvertisment()
-    localmart.addAdvertisment()
-    time.sleep(10)
+    localmart.viewAds()
+    localmart.deleteAdvertisment()
+    #localmart.addAdvertisment()
     localmart.closeBrowser()

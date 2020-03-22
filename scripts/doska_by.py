@@ -16,7 +16,7 @@ import pickle
 
 import shared_data #тут данные пользователя и объявление, которые будут общие для всех сайтов
 
-username = shared_data.username 
+username = shared_data.username
 email=shared_data.email
 password = shared_data.password
 
@@ -43,7 +43,7 @@ class Doska_Bot:
 
   def closeBrowser(self):
     self.driver.quit()
-  
+
   def login(self):
     self.driver.get('https://www.doska.by/login/')
 
@@ -61,7 +61,7 @@ class Doska_Bot:
     savepass_input=self.driver.find_element_by_xpath('//input[@type="checkbox"][@name="savepass"][@id="savepass"]')
     if not savepass_input.is_selected():
       savepass_input.click()
-    
+
     time.sleep(random.randint(1,3))
     button_enter=self.driver.find_element_by_xpath('//input[@type="submit"][@name="blogin"][@value="Войти"]')
     time.sleep(random.randint(2,5))
@@ -70,7 +70,7 @@ class Doska_Bot:
   def saveCookies(self):
     self.login()
     #cookies dump
-    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb")) 
+    pickle.dump( self.driver.get_cookies() , open(path_to_cookies,"wb"))
     #driver.close()
 
   def loginWithCookies(self):
@@ -79,6 +79,8 @@ class Doska_Bot:
     cookies = pickle.load(open(path_to_cookies,"rb"))
     self.driver.delete_all_cookies()#delete old cookes from browser
     for cookie in cookies:
+      if 'expiry' in cookie:
+        del cookie['expiry']
       self.driver.add_cookie(cookie)
     time.sleep(3)
     self.driver.get('https://www.doska.by/my-ads/')
@@ -160,7 +162,7 @@ class Doska_Bot:
     time.sleep(random.randint(2,3))
     price.clear()
     if self.advertisment.price==0:
-      price.send_keys(str(self.advertisment.price+1.0)) 
+      price.send_keys(str(self.advertisment.price+1.0))
 
     time.sleep(random.randint(2,5))
     button_publish.click()
@@ -178,7 +180,7 @@ class Doska_Bot:
     i=0
     for add_file_button in add_file_buttons:
       if i<len(self.advertisment.images):
-        time.sleep(random.randint(1,3))   
+        time.sleep(random.randint(1,3))
         add_file_button.clear()
         add_file_button.send_keys(os.path.abspath(self.advertisment.images[i]))
         i+=1
@@ -199,7 +201,7 @@ class Doska_Bot:
     string = string.replace("\n","")
     string=' '.join(string.split()).strip()
     string= string.replace("!",".")
-    return string 
+    return string
 
   def deleteAdvertisment(self):
     row=self.findAdvertisment()
@@ -212,14 +214,14 @@ if __name__ == "__main__":
     user=Account(username,password,email)
     location=shared_data.location
     advertisment=shared_data.advertisment
-    
+
     doska = Doska_Bot(user,advertisment)
     doska.saveCookies()
     doska.loginWithCookies()
-    #oo.login()
-    #oo.deleteAdvertisment()
     doska.deleteAdvertisment()
     doska.addAdvertisment()
     doska.viewAds()
     time.sleep(random.randint(3,6))
     doska.closeBrowser()
+
+  # script is ready.sometimes deleteAdvertisment() did't work well,need to do two times
